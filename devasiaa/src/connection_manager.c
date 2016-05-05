@@ -93,4 +93,5 @@ void init()
     head_fd = control_socket;
 
     main_loop();
+	printf("Going to mainloop");
 }

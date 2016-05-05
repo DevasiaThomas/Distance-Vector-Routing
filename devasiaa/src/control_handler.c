@@ -73,7 +73,7 @@ int create_control_sock()
         ERROR("listen() failed");
 
     LIST_INIT(&control_conn_list);
-
+	printf("Socket Created\n");
     return sock;
 }
 
