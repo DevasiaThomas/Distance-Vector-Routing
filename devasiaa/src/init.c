@@ -84,10 +84,13 @@ void init_handler(int sock_index,char *cntrl_payload)
 		else{
 			//printf("Yay NOT INF!!!\n");
 			nhop[i] = i;
+			timerholders[i]=0;
 			neighbor[i] = 1;
 			if(dv[i] == 0){
 				neighbor[i] = 0;
 				self = i;
+				timerholder = i;
+				timerholders[i] = 1;
 				//printf("Found myself\n");
 			}
 		}	
@@ -166,6 +169,11 @@ void init_handler(int sock_index,char *cntrl_payload)
 		head_fd = data_socket;	
 	//////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////
-	send_conn(router_socket);					
+	send_conn(router_socket);
+	clock_gettime(CLOCK_MONOTONIC, &current);
+	start[self] = current;
+	timeout.tv_sec = tval;
+	timeout.tv_nsec = 0;
+						
 }
 

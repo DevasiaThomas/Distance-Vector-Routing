@@ -29,6 +29,7 @@ void read_conn(int sock_index)
 {
 	struct RTR_UPDT_HDR hdr;
 	struct RTR_UPDT_PAY pay;
+	int srtr;
     int totalsize = RTR_UPDATE_HDR_SIZE + (nrtr * RTR_UPDATE_PAY_SIZE);
 	char *total = (char *) malloc(totalsize);
  	struct sockaddr_in other;int otherlen = sizeof(other);
@@ -37,9 +38,22 @@ void read_conn(int sock_index)
 	}
 	memcpy(&hdr, total, RTR_UPDATE_HDR_SIZE);
 	for(int i =0;i<nrtr;i++){
+		if(ntohl(hdr.sip) == rtrip[i]){
+			srtr = i;
+			break;
+		}
+	}
+	for(int i =0;i<nrtr;i++){
 		memcpy(&pay, total+ RTR_UPDATE_HDR_SIZE + (i*RTR_UPDATE_PAY_SIZE), RTR_UPDATE_PAY_SIZE);
-	}	
-	printf("numrtr%d\tsport%d\tsip%d\trip%d\trport%d\trid%d\trcost%d\n",ntohs(hdr.numrtr),ntohs(hdr.sport),ntohl(hdr.sip),ntohl(pay.rip),ntohs(pay.rport),ntohs(pay.rid),ntohs(pay.rcost));	
+		if(dv[pos[i]] > (dv[srtr] + ntohs(pay.rcost))){
+			dv[pos[i]] = dv[srtr] + ntohs(pay.rcost);
+			nhop[pos[i]] = srtr;
+		}
+	}
+	timerholders[srtr] = 1;
+	clock_gettime(CLOCK_MONOTONIC, &current);
+	start[srtr] = current;	
+	//printf("numrtr%d\tsport%d\tsip%d\trip%d\trport%d\trid%d\trcost%d\n",ntohs(hdr.numrtr),ntohs(hdr.sport),ntohl(hdr.sip),ntohl(pay.rip),ntohs(pay.rport),ntohs(pay.rid),ntohs(pay.rcost));	
 }
 
 void send_conn(int sock_index)
