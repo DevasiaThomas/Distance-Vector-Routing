@@ -33,6 +33,7 @@
 #include "../include/control_header_lib.h"
 #include "../include/author.h"
 #include "../include/init.h"
+#include "../include/routingtable.h"
 
 #ifndef PACKET_USING_STRUCT
     #define CNTRL_CONTROL_CODE_OFFSET 0x04
@@ -169,6 +170,9 @@ bool control_recv_hook(int sock_index)
        
         case 1: init_handler(cntrl_payload);
                 break;
+
+		case 2: rtable_response(sock_index);
+				break;
 
 		default: printf("Wtf value this %d\n", control_code);
     }

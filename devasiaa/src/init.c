@@ -25,9 +25,25 @@
 #include <netinet/in.h>
 
 #include "../include/global.h"
-#include "../include/control_header_lib.h"
-#include "../include/network_util.h"
-#include "../include/init.h"
+
+
+#define INIT_PAYINFO_SIZE 4
+#define INIT_RTRINFO_SIZE 12
+
+
+struct __attribute__((__packed__)) INIT_PAYINFO
+{
+	uint16_t number;
+    uint16_t upi;
+};
+struct __attribute__((__packed__)) INIT_RTRINFO
+{
+	uint16_t rtrid;
+    uint16_t rtrport;
+	uint16_t dataport;
+	uint16_t cost;
+	uint32_t rtrip;
+};
 
 
 
@@ -43,29 +59,29 @@ void init_handler(char *cntrl_payload)
 		memcpy(&rtrinfo, cntrl_payload + INIT_PAYINFO_SIZE + (i*INIT_RTRINFO_SIZE), INIT_RTRINFO_SIZE);
 		pos[i] = i;
 		rtrid[i] = ntohs(rtrinfo.rtrid);
-		printf("rtrid:%d\t",rtrid[i]);
+		//printf("rtrid:%d\t",rtrid[i]);
 		rtriddup[i] = ntohs(rtrinfo.rtrid);
 		rtrport[i] = ntohs(rtrinfo.rtrport);
-		printf("rtrport:%d\t",rtrport[i]);
+		//printf("rtrport:%d\t",rtrport[i]);
 		rtrip[i] = ntohl(rtrinfo.rtrip);
-		printf("rtrip:%d\t",rtrip[i]);
+		//printf("rtrip:%d\t",rtrip[i]);
 		dataport[i] = ntohs(rtrinfo.dataport);
-		printf("dataport:%d\t",dataport[i]); 
+		//printf("dataport:%d\t",dataport[i]); 
 		dv[i] = ntohs(rtrinfo.cost);
-		printf("Cost to rtr:%d\n",dv[i]);
+		//printf("Cost to rtr:%d\n",dv[i]);
 		if(dv[i] == INF){
-			printf("Yay INF!!!\n");
+			//printf("Yay INF!!!\n");
 			nhop[i] = INF;
 			neighbor[i] = 0;
 		}
 		else{
-			printf("Yay NOT INF!!!\n");
+			//printf("Yay NOT INF!!!\n");
 			nhop[i] = i;
 			neighbor[i] = 1;
 			if(dv[i] == 0){
 				neighbor[i] = 0;
 				self = i;
-				printf("Found myself\n");
+				//printf("Found myself\n");
 			}
 		}	
 	}
