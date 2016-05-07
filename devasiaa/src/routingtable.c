@@ -46,15 +46,15 @@ void rtable_response(int sock_index)
 	cntrl_response_payload = (char *) malloc(payload_len);
 
 	for(int i=0;i<nrtr;i++){
-		printf("i:%d\n",i);
-		printf("posi:%d\n",pos[i]);
+		//printf("i:%d\n",i);
+		//printf("posi:%d\n",pos[i]);
 		rtable.rtrid = htons(rtrid[pos[i]]);
-		printf("Rtrid:%d\t",rtrid[pos[i]]);
+		//printf("Rtrid:%d\t",rtrid[pos[i]]);
 		rtable.padding = 0;
 		rtable.nxthop = (nhop[pos[i]]!=INF)?(htons(rtrid[nhop[pos[i]]])):(htons(INF));
-		printf("NXThop:%d\t",ntohs(rtable.nxthop));
+		//printf("NXThop:%d\t",ntohs(rtable.nxthop));
 		rtable.cost = htons(dv[pos[i]]);
-		printf("COST:%d\n",dv[pos[i]]);
+		//printf("COST:%d\n",dv[pos[i]]);
 		memcpy(cntrl_response_payload+(i*sizeof(struct RTABLE_PAYLOAD)), &rtable, (payload_len/nrtr));
 	}
 	printf("...%s...\n",cntrl_response_payload);
