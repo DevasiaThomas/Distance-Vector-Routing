@@ -57,5 +57,6 @@ void update_handler(char *cntrl_payload)
 			dv[pos[i]]+=rtrdiff;
 		}
 		printf("%d\t",dv[pos[i]]);
-	}											
+	}
+	printf("\n");											
 }
