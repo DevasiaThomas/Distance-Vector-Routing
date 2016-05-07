@@ -25,6 +25,8 @@
 #include <netinet/in.h>
 
 #include "../include/global.h"
+#include "../include/control_header_lib.h"
+#include "../include/network_util.h"
 
 #define UPDATE_PAY_SIZE 4
 
@@ -35,7 +37,7 @@ struct __attribute__((__packed__)) UPDATE_PAY
 };
 
 
-void update_handler(char *cntrl_payload)
+void update_handler(int sock_index,char *cntrl_payload)
 {
 	struct UPDATE_PAY updatepay;
 	int rtrindex,rtrdiff;
@@ -58,5 +60,9 @@ void update_handler(char *cntrl_payload)
 		}
 		//printf("%d\t",dv[pos[i]]);
 	}
-	//printf("\n");											
+	//printf("\n");	
+	char *cntrl_response_header;
+	cntrl_response_header = create_response_header(sock_index, 3, 0, 0);
+	sendALL(sock_index, cntrl_response_header, CNTRL_RESP_HEADER_SIZE);
+	free(cntrl_response_header);										
 }

@@ -73,6 +73,7 @@ void send_conn(int sock_index)
 			if(sendto(sock_index,total,totalsize,0,(struct sockaddr *)&other,otherlen)==-1){
 				ERROR("sendto got !@#!!@#");
 			}
+			else{printf("Sent some stuff\n");}
 		}		
 }
 

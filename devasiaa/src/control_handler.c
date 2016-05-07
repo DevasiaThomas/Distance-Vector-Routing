@@ -169,13 +169,13 @@ bool control_recv_hook(int sock_index)
         case 0: author_response(sock_index);
                 break;
        
-        case 1: init_handler(cntrl_payload);
+        case 1: init_handler(sock_index,cntrl_payload);
                 break;
 
 		case 2: rtable_response(sock_index);
 				break;
 
-		case 3: update_handler(cntrl_payload);
+		case 3: update_handler(sock_index,cntrl_payload);
 				break;
 	
 		case 4: ;char *cntrl_response_header = create_response_header(sock_index, 4, 0, 0); // Crash

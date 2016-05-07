@@ -27,7 +27,9 @@
 #include <netinet/in.h>
 
 #include "../include/global.h"
+#include "../include/network_util.h"
 #include "../include/connection_manager.h"
+#include "../include/control_header_lib.h"
 #include "../include/data_handler.h"
 #include "../include/routing_handler.h"
 
@@ -52,7 +54,7 @@ struct __attribute__((__packed__)) INIT_RTRINFO
 
 
 
-void init_handler(char *cntrl_payload)
+void init_handler(int sock_index,char *cntrl_payload)
 {
 	struct INIT_PAYINFO payinfo;
 	struct INIT_RTRINFO rtrinfo;
@@ -130,6 +132,10 @@ void init_handler(char *cntrl_payload)
     if(head_fd < router_socket)
 		head_fd = router_socket;
 	/////////////////////////////////////////////////////
+	char *cntrl_response_header;
+	cntrl_response_header = create_response_header(sock_index, 1, 0, 0);
+	sendALL(sock_index, cntrl_response_header, CNTRL_RESP_HEADER_SIZE);
+	free(cntrl_response_header);
 	///////////////////////////////////////////////////// DATA PORT
     struct sockaddr_in data_addr;
     addrlen = sizeof(data_addr);
