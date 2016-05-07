@@ -43,11 +43,16 @@ void init_handler(char *cntrl_payload)
 		memcpy(&rtrinfo, cntrl_payload + INIT_PAYINFO_SIZE + (i*INIT_RTRINFO_SIZE), INIT_RTRINFO_SIZE);
 		pos[i] = i;
 		rtrid[i] = ntohs(rtrinfo.rtrid);
+		printf("rtrid:%d\t",rtrid[i]);
 		rtriddup[i] = ntohs(rtrinfo.rtrid);
 		rtrport[i] = ntohs(rtrinfo.rtrport);
+		printf("rtrport:%d\t",rtrport[i]);
 		rtrip[i] = ntohl(rtrinfo.rtrip);
-		dataport[i] = ntohs(rtrinfo.dataport); 
+		printf("rtrip:%d\t",rtrip[i]);
+		dataport[i] = ntohs(rtrinfo.dataport);
+		printf("dataport:%d\t",dataport[i]); 
 		dv[i] = ntohs(rtrinfo.cost);
+		printf("Cost to rtr:%d\n",dv[i]);
 		if(dv[i] == INF){
 			printf("Yay INF!!!\n");
 			nhop[i] = INF;
