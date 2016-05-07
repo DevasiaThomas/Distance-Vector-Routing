@@ -46,7 +46,7 @@ void rtable_response(int sock_index)
 	cntrl_response_payload = (char *) malloc(payload_len);
 
 	for(int i=0;i<nrtr;i++){
-		pritnf("i:%d",i);
+		printf("i:%d",i);
 		rtable.rtrid = htons(rtrid[pos[i]]);
 		rtable.padding = 0;
 		rtable.nxthop = (nhop[pos[i]]!=INF)?(htons(rtrid[nhop[pos[i]]])):(htons(INF));
