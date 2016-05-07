@@ -34,6 +34,7 @@
 #include "../include/author.h"
 #include "../include/init.h"
 #include "../include/routingtable.h"
+#include "../include/update.h"
 
 #ifndef PACKET_USING_STRUCT
     #define CNTRL_CONTROL_CODE_OFFSET 0x04
