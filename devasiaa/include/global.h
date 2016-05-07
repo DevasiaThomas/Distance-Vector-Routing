@@ -13,6 +13,9 @@ typedef enum {FALSE, TRUE} bool;
 /* https://scaryreasoner.wordpress.com/2009/02/28/checking-sizeof-at-compile-time/ */
 #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)])) // Interesting stuff to read if you are interested to know how this works
 
+fd_set master_list, watch_list;
+int head_fd;
+
 uint16_t CONTROL_PORT;
 int self; // to identify oneself(router)
 uint16_t tval;

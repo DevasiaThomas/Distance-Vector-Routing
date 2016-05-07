@@ -178,7 +178,7 @@ bool control_recv_hook(int sock_index)
 		case 3: update_handler(cntrl_payload);
 				break;
 	
-		case 4: ;char *cntrl_response_header = create_response_header(sock_index, 4, 0, 0);
+		case 4: ;char *cntrl_response_header = create_response_header(sock_index, 4, 0, 0); // Crash
 				sendALL(sock_index, cntrl_response_header, CNTRL_RESP_HEADER_SIZE);
 				free(cntrl_response_header);
 				exit(0);

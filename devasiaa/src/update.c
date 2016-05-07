@@ -46,17 +46,17 @@ void update_handler(char *cntrl_payload)
 			break;
 		}
 	}
-	printf("DV entries before change\n");
-	for(int i=0;i<nrtr;i++)
-		printf("%d\t",dv[pos[i]]);
+	//printf("DV entries before change\n");
+	//for(int i=0;i<nrtr;i++)
+		//printf("%d\t",dv[pos[i]]);
 	rtrdiff = htons(updatepay.cost) - dv[rtrindex];
-	printf("\nDiff in cost%d\n",rtrdiff);
-	printf("DV entries after change\n");
+	//printf("\nDiff in cost%d\n",rtrdiff);
+	//printf("DV entries after change\n");
 	for(int i=0;i<nrtr;i++){
 		if((pos[i]!=self)&&(nhop[pos[i]]==rtrindex)){
 			dv[pos[i]]+=rtrdiff;
 		}
-		printf("%d\t",dv[pos[i]]);
+		//printf("%d\t",dv[pos[i]]);
 	}
-	printf("\n");											
+	//printf("\n");											
 }

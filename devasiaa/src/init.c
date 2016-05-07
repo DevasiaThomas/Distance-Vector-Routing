@@ -22,9 +22,14 @@
  */
 
 #include <string.h>
+#include <sys/socket.h>
+#include <sys/queue.h>
 #include <netinet/in.h>
 
 #include "../include/global.h"
+#include "../include/connection_manager.h"
+#include "../include/data_handler.h"
+#include "../include/routing_handler.h"
 
 
 #define INIT_PAYINFO_SIZE 4
@@ -99,5 +104,62 @@ void init_handler(char *cntrl_payload)
 				pos[j+1] = temp2;
 			}
 		}
-	}							
+	}
+	//////////////////////////////////////////////////Routing Port
+    struct sockaddr_in router_addr;
+    socklen_t addrlen = sizeof(router_addr);
+
+    router_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if(router_socket < 0)
+        ERROR("router socket() failed");
+
+    /* Make socket re-usable */
+    if(setsockopt(router_socket, SOL_SOCKET, SO_REUSEADDR, (int[]){1}, sizeof(int)) < 0)
+        ERROR("router setsockopt() failed");
+
+    bzero(&router_addr, sizeof(router_addr));
+
+    router_addr.sin_family = AF_INET;
+    router_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    router_addr.sin_port = htons(rtrport[self]);
+
+    if(bind(router_socket, (struct sockaddr *)&router_addr, sizeof(router_addr)) < 0)
+        ERROR("router bind() failed");
+
+	FD_SET(router_socket, &master_list);
+    if(head_fd < router_socket)
+		head_fd = router_socket;
+	/////////////////////////////////////////////////////
+	///////////////////////////////////////////////////// DATA PORT
+    struct sockaddr_in data_addr;
+    addrlen = sizeof(data_addr);
+
+    data_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if(data_socket < 0)
+        ERROR("data socket() failed");
+
+    /* Make socket re-usable */
+    if(setsockopt(data_socket, SOL_SOCKET, SO_REUSEADDR, (int[]){1}, sizeof(int)) < 0)
+        ERROR("data setsockopt() failed");
+
+    bzero(&data_addr, sizeof(data_addr));
+
+    data_addr.sin_family = AF_INET;
+    data_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    data_addr.sin_port = htons(dataport[self]);
+
+    if(bind(data_socket, (struct sockaddr *)&data_addr, sizeof(data_addr)) < 0)
+        ERROR("bind() failed");
+
+    if(listen(data_socket, 20) < 0)
+        ERROR("listen() failed");
+
+    LIST_INIT(&data_conn_list);
+	FD_SET(data_socket, &master_list);
+    if(head_fd < data_socket)
+		head_fd = data_socket;	
+	//////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////
+	send_conn(router_socket);					
 }
+
