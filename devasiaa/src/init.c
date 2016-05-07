@@ -85,6 +85,9 @@ void init_handler(char *cntrl_payload)
 			}
 		}	
 	}
+	for(int i=0;i<nrtr;i++)
+		printf("Pos[i]:%d\n",pos[i]);
+
 	for(int i=(nrtr-1);i>0;i--){
 		for(int j=0;j<i;j++){
 			if(rtriddup[j] > rtriddup[j+1]){
