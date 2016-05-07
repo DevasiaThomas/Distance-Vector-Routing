@@ -85,12 +85,7 @@ void init_handler(char *cntrl_payload)
 			}
 		}	
 	}
-	int flag = 1;
-	for(int i=nrtr;i>0;i--){
-		if(!flag){
-			break;
-		}
-		flag = 0;
+	for(int i=(nrtr-1);i>0;i--){
 		for(int j=0;j<i;j++){
 			if(rtriddup[j] > rtriddup[j+1]){
 				uint16_t temp1 = rtriddup[j];
@@ -99,7 +94,6 @@ void init_handler(char *cntrl_payload)
 				int temp2 = pos[j];
 				pos[j] = pos[j+1];
 				pos[j+1] = temp2;
-				flag = 1;
 			}
 		}
 	}							
