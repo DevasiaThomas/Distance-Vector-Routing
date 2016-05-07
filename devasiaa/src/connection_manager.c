@@ -92,6 +92,6 @@ void init()
     FD_SET(control_socket, &master_list);
     head_fd = control_socket;
 
+	self = 0;
     main_loop();
-	printf("Going to mainloop");
 }

@@ -32,6 +32,7 @@
 #include "../include/network_util.h"
 #include "../include/control_header_lib.h"
 #include "../include/author.h"
+#include "../include/init.h"
 
 #ifndef PACKET_USING_STRUCT
     #define CNTRL_CONTROL_CODE_OFFSET 0x04
@@ -73,7 +74,6 @@ int create_control_sock()
         ERROR("listen() failed");
 
     LIST_INIT(&control_conn_list);
-	printf("Socket Created\n");
     return sock;
 }
 
@@ -166,13 +166,11 @@ bool control_recv_hook(int sock_index)
         case 0: author_response(sock_index);
                 break;
 
-        /* .......
-        case 1: init_response(sock_index, cntrl_payload);
+       
+        case 1: init_handler(cntrl_payload);
                 break;
 
-            .........
-           ....... 
-         ......*/
+		default: printf("Wtf value this %d\n", control_code);
     }
 
     if(payload_len != 0) free(cntrl_payload);
