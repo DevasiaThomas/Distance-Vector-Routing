@@ -42,11 +42,13 @@ void main_loop()
             ERROR("select failed.");
 		if(selret == 0){
 			if(timerholder == self){
+				printf("In select timeout for self\n");
 				send_conn(router_socket);
 				clock_gettime(CLOCK_MONOTONIC, &current);
 				start[self] = current;
 			}
 			else{
+				printf("Select timeout for others %d\n", timerholder);
 				ctr[timerholder]++;
 				if(ctr[timerholder]==3){
 					for(int i=0;i<nrtr;i++){
@@ -102,6 +104,7 @@ void main_loop()
 				timeout.tv_sec = min;
 				timeout.tv_nsec = 0;
 			}
+			printf("New timerholder %d\t New Timeout%ld\n",timerholder,timeout.tv_sec);
 		}
 		else{
        		/* Loop through file descriptors to check which ones are ready */
