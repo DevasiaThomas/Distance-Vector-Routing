@@ -18,7 +18,7 @@
  *
  * @section DESCRIPTION
  *
- * AUTHOR [Control Code: 0x02]
+ * ROUTING-TABLE [Control Code: 0x02]
  */
 
 #include <string.h>

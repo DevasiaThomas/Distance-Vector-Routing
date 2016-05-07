@@ -166,12 +166,14 @@ bool control_recv_hook(int sock_index)
     switch(control_code){
         case 0: author_response(sock_index);
                 break;
-
        
         case 1: init_handler(cntrl_payload);
                 break;
 
 		case 2: rtable_response(sock_index);
+				break;
+
+		case 3: update_handler(cntrl_payload);
 				break;
 
 		default: printf("Wtf value this %d\n", control_code);
