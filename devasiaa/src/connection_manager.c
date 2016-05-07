@@ -27,6 +27,7 @@
 #include "../include/connection_manager.h"
 #include "../include/global.h"
 #include "../include/control_handler.h"
+#include "../include/routing_handler.h"
 
 
 void main_loop()
@@ -56,7 +57,8 @@ void main_loop()
 
                 /* router_socket */
                 else if(sock_index == router_socket){
-                    //call handler that will call recvfrom() .....
+                    printf("In router select\n");
+					read_conn(sock_index);
                 }
 
                 /* data_socket */
