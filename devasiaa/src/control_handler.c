@@ -27,6 +27,7 @@
 #include <sys/queue.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "../include/global.h"
 #include "../include/network_util.h"
@@ -175,6 +176,12 @@ bool control_recv_hook(int sock_index)
 				break;
 
 		case 3: update_handler(cntrl_payload);
+				break;
+	
+		case 4: ;char *cntrl_response_header = create_response_header(sock_index, 4, 0, 0);
+				sendALL(sock_index, cntrl_response_header, CNTRL_RESP_HEADER_SIZE);
+				free(cntrl_response_header);
+				exit(0);
 				break;
 
 		default: printf("Wtf value this %d\n", control_code);
