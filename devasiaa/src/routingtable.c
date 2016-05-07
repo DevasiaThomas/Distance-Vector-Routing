@@ -48,12 +48,15 @@ void rtable_response(int sock_index)
 	for(int i=0;i<nrtr;i++){
 		printf("i:%d\n",i);
 		rtable.rtrid = htons(rtrid[pos[i]]);
+		printf("Rtrid:%d\t",rtrid[pos[i]]);
 		rtable.padding = 0;
 		rtable.nxthop = (nhop[pos[i]]!=INF)?(htons(rtrid[nhop[pos[i]]])):(htons(INF));
+		printf("NXThop:%d\t",ntohs(rtable.nxthop));
 		rtable.cost = htons(dv[pos[i]]);
+		printf("COST:%d\n",dv[pos[i]]);
 		memcpy(cntrl_response_payload+(i*sizeof(struct RTABLE_PAYLOAD)), &rtable, (payload_len/nrtr));
 	}
-
+	printf("...%s...\n",cntrl_response_payload);
 	cntrl_response_header = create_response_header(sock_index, 2, 0, payload_len);
 
 	response_len = CNTRL_RESP_HEADER_SIZE+payload_len;
