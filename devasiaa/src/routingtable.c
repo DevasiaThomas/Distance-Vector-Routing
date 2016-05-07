@@ -47,6 +47,7 @@ void rtable_response(int sock_index)
 
 	for(int i=0;i<nrtr;i++){
 		printf("i:%d\n",i);
+		printf("posi:%d\n",pos[i]);
 		rtable.rtrid = htons(rtrid[pos[i]]);
 		printf("Rtrid:%d\t",rtrid[pos[i]]);
 		rtable.padding = 0;
