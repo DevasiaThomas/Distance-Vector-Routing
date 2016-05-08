@@ -57,7 +57,7 @@ void rtable_response(int sock_index)
 		//printf("COST:%d\n",dv[pos[i]]);
 		memcpy(cntrl_response_payload+(i*sizeof(struct RTABLE_PAYLOAD)), &rtable, (payload_len/nrtr));
 	}
-	printf("...%s...\n",cntrl_response_payload);
+	//printf("...%s...\n",cntrl_response_payload);
 	cntrl_response_header = create_response_header(sock_index, 2, 0, payload_len);
 
 	response_len = CNTRL_RESP_HEADER_SIZE+payload_len;

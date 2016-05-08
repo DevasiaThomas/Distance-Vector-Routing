@@ -18,7 +18,7 @@
  *
  * @section DESCRIPTION
  *
- * This contains the main function. Add further description here....
+ * This contains the main function.
  */
 
 #include "../include/global.h"

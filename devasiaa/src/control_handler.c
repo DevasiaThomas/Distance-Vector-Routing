@@ -36,6 +36,7 @@
 #include "../include/init.h"
 #include "../include/routingtable.h"
 #include "../include/update.h"
+#include "../include/sendfile.h"
 
 #ifndef PACKET_USING_STRUCT
     #define CNTRL_CONTROL_CODE_OFFSET 0x04
@@ -182,6 +183,9 @@ bool control_recv_hook(int sock_index)
 				sendALL(sock_index, cntrl_response_header, CNTRL_RESP_HEADER_SIZE);
 				free(cntrl_response_header);
 				exit(0);
+				break;
+
+		case 5: sendfile_handler(sock_index,cntrl_payload,payload_len);
 				break;
 
 		default: printf("Wtf value this %d\n", control_code);

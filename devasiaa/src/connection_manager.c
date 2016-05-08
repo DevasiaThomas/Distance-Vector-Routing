@@ -28,10 +28,11 @@
 #include "../include/global.h"
 #include "../include/control_handler.h"
 #include "../include/routing_handler.h"
+#include "../include/data_handler.h"
 
 
 void main_loop()
-{
+{	
     int selret, sock_index, fdaccept;
 
     while(TRUE){
@@ -127,23 +128,29 @@ void main_loop()
 
                 	/* router_socket */
                 	else if(sock_index == router_socket){
-                	    printf("In router select\n");
+                	   //printf("In router select\n");
 						read_conn(sock_index);
                 	}
 
                 	/* data_socket */
                 	else if(sock_index == data_socket){
-                	    //new_data_conn(sock_index);
+                	    fdaccept = new_control_conn(sock_index);
+
+                    /* Add to watched socket list */
+                    	FD_SET(fdaccept, &master_list);
+                    	if(fdaccept > head_fd) head_fd = fdaccept;
                 	}
 
                 	/* Existing connection */
-                	else{
-                	    if(isControl(sock_index)){
+                	else if(isControl(sock_index)){
                 	        if(!control_recv_hook(sock_index)) FD_CLR(sock_index, &master_list);
-                	    }
-                	    //else if isData(sock_index);
-                	    else ERROR("Unknown socket index");
                 	}
+                	else if(isData(sock_index)){
+							data_recv_hook(sock_index);
+							FD_CLR(sock_index, &master_list);
+					}
+                	else ERROR("Unknown socket index");
+                	
             	}
         	}
     	}
