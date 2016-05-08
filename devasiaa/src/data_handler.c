@@ -86,7 +86,7 @@ bool isData(int sock_index)
 }
 
 void data_recv_hook(int sock_index){
-	char *data_packet;int dIndex;
+	char *data_packet;int dIndex;int sentcount =0;int ret;
 	struct DATA_PACKET_HDR dp_hdr;
     
     /* Get 1st data packet */
@@ -98,6 +98,7 @@ void data_recv_hook(int sock_index){
         free(data_packet);
         return;
     }
+	sentcount++;
 	memcpy(&dp_hdr,data_packet,DATA_PACKET_HDR_SIZE);
 	for(int i=0;i<nrtr;i++){
 		if(rtrip[pos[i]] == ntohl(dp_hdr.dIP)){
@@ -106,7 +107,6 @@ void data_recv_hook(int sock_index){
 		}
 	}
 	dp_hdr.TTL -=1;
-	int sentcount =0;
 	if(dIndex == self){
 		int fd;
 		char *filename = (char *)malloc(sizeof(NAME)+3);
@@ -133,40 +133,44 @@ void data_recv_hook(int sock_index){
 		close(fd);
 		remove_data_conn(sock_index);
 	}
-	else{if(dp_hdr.TTL!=0){
-			int sd;
-			struct sockaddr_in nxt;
-			sd = socket(AF_INET, SOCK_STREAM, 0);
-    		if(sd < 0)
-       			ERROR(" data send socket() failed");
-			bzero(&nxt, sizeof(nxt));
+	else{
+		int sd;
+		struct sockaddr_in nxt;
+		sd = socket(AF_INET, SOCK_STREAM, 0);
+   		if(sd < 0)
+      		ERROR(" data send socket() failed");
+		bzero(&nxt, sizeof(nxt));
 
-    		nxt.sin_family = AF_INET;
-   	 		nxt.sin_addr.s_addr = htonl(rtrip[nhop[dIndex]]);
-    		nxt.sin_port = htons(dataport[nhop[dIndex]]);
+    	nxt.sin_family = AF_INET;
+   	 	nxt.sin_addr.s_addr = htonl(rtrip[nhop[dIndex]]);
+    	nxt.sin_port = htons(dataport[nhop[dIndex]]);
 	
-			if(connect(sd,(struct sockaddr *)&nxt,sizeof(nxt))<0)
-				ERROR(" data send connect failed");
+		if(connect(sd,(struct sockaddr *)&nxt,sizeof(nxt))<0)
+			ERROR(" data send connect failed");
+		if(dp_hdr.TTL!=0){
 			memcpy(data_packet,&dp_hdr,DATA_PACKET_HDR_SIZE);
 			sendALL(sd, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE));
 			sentcount ++;
-			while(recvALL(sock_index, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE)) < 0){
-				memcpy(&dp_hdr,data_packet,DATA_PACKET_HDR_SIZE);
-				dp_hdr.TTL-=1;
-				memcpy(data_packet,&dp_hdr,DATA_PACKET_HDR_SIZE);
-				sendALL(sd, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE));
-				sentcount++;
-			}	
-			close(sd);
-			remove_data_conn(sock_index);
 		}
 		else{
 			printf("Packets Dropped\n");
 		}
+		while(recvALL(sock_index, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE)) > 0){
+			memcpy(&dp_hdr,data_packet,DATA_PACKET_HDR_SIZE);
+			dp_hdr.TTL-=1;
+			if(dp_hdr.TTL!=0){
+				memcpy(data_packet,&dp_hdr,DATA_PACKET_HDR_SIZE);
+				sendALL(sd, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE));
+				sentcount++;
+			}
+			else{
+				printf("Packets dropped\n");
+			}
+		}	
+		close(sd);
+		remove_data_conn(sock_index);
 	}
-
-    /* Get IP from the header */
-    
+		    
 
     free(data_packet);
 	printf("File RCVD in %d chunks\n", sentcount);
