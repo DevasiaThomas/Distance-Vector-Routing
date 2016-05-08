@@ -170,10 +170,11 @@ void init_handler(int sock_index,char *cntrl_payload)
 	//////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////
 	send_conn(router_socket);
-	clock_gettime(CLOCK_MONOTONIC, &current);
+	//clock_gettime(CLOCK_MONOTONIC, &current);
+	gettimeofday(&current,NULL);
 	start[self] = current;
 	timeout.tv_sec = tval;
-	timeout.tv_nsec = 0;
+	timeout.tv_usec = 0;
 						
 }
 

@@ -51,7 +51,8 @@ void read_conn(int sock_index)
 		}
 	}
 	timerholders[srtr] = 1;
-	clock_gettime(CLOCK_MONOTONIC, &current);
+	gettimeofday(&current,NULL);
+	//clock_gettime(CLOCK_MONOTONIC, &current);
 	start[srtr] = current;	
 	//printf("numrtr%d\tsport%d\tsip%d\trip%d\trport%d\trid%d\trcost%d\n",ntohs(hdr.numrtr),ntohs(hdr.sport),ntohl(hdr.sip),ntohl(pay.rip),ntohs(pay.rport),ntohs(pay.rid),ntohs(pay.rcost));	
 }
@@ -87,7 +88,7 @@ void send_conn(int sock_index)
 			if(sendto(sock_index,total,totalsize,0,(struct sockaddr *)&other,otherlen)==-1){
 				ERROR("sendto got !@#!!@#");
 			}
-			else{printf("Sent some stuff\n");}
+			//else{printf("Sent some stuff\n");}
 		}		
 }
 

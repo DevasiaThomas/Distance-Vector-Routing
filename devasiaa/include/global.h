@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
-#include <time.h>
+#include <sys/time.h>
 
 typedef enum {FALSE, TRUE} bool;
 
@@ -17,7 +17,7 @@ typedef enum {FALSE, TRUE} bool;
 fd_set master_list, watch_list;
 int head_fd;
 
-struct timespec timeout, current, start[5];
+struct timeval timeout, current, start[5];
 int timerholder;
 int timerholders[5];
 

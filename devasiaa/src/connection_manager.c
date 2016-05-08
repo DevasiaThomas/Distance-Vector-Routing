@@ -36,7 +36,7 @@ void main_loop()
 
     while(TRUE){
         watch_list = master_list;
-        selret = pselect(head_fd+1, &watch_list, NULL, NULL,((tval>0)?(&timeout):NULL),NULL);
+        selret = select(head_fd+1, &watch_list, NULL, NULL,((tval>0)?(&timeout):NULL));
 
         if(selret < 0)
             ERROR("select failed.");
@@ -44,7 +44,8 @@ void main_loop()
 			if(timerholder == self){
 				printf("In select timeout for self\n");
 				send_conn(router_socket);
-				clock_gettime(CLOCK_MONOTONIC, &current);
+				//clock_gettime(CLOCK_MONOTONIC, &current);
+				gettimeofday(&current,NULL);
 				start[self] = current;
 			}
 			else{
@@ -60,11 +61,13 @@ void main_loop()
 					timerholders[timerholder] = 0;
 				}
 				else{
-					clock_gettime(CLOCK_MONOTONIC, &current);
+					gettimeofday(&current,NULL);
+					//clock_gettime(CLOCK_MONOTONIC, &current);
 					start[timerholder] = current;
 				}
 			}
-			clock_gettime(CLOCK_MONOTONIC, &current);
+			gettimeofday(&current,NULL);
+			//clock_gettime(CLOCK_MONOTONIC, &current);
 			int flag =0, min =tval;
 			for(int i=0;i<nrtr;i++){
 				if((i!=timerholder)&&(timerholders[i])){
@@ -82,7 +85,8 @@ void main_loop()
 							timerholders[i] = 0;
 						}
 						else{
-							clock_gettime(CLOCK_MONOTONIC, &current);
+							gettimeofday(&current,NULL);
+							//clock_gettime(CLOCK_MONOTONIC, &current);
 							start[i] = current;
 						}
 					}
@@ -98,11 +102,11 @@ void main_loop()
 			if(!flag){
 				timerholder = self;
 				timeout.tv_sec = tval;
-				timeout.tv_nsec = 0;
+				timeout.tv_usec = 0;
 			}
 			else{
 				timeout.tv_sec = min;
-				timeout.tv_nsec = 0;
+				timeout.tv_usec = 0;
 			}
 			printf("New timerholder %d\t New Timeout%ld\n",timerholder,timeout.tv_sec);
 		}
