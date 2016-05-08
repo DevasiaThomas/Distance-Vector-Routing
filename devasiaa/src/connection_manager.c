@@ -134,6 +134,7 @@ void main_loop()
 
                 	/* data_socket */
                 	else if(sock_index == data_socket){
+						printf("New data connection\n");
                 	    fdaccept = new_control_conn(sock_index);
 
                     /* Add to watched socket list */
@@ -146,6 +147,7 @@ void main_loop()
                 	        if(!control_recv_hook(sock_index)) FD_CLR(sock_index, &master_list);
                 	}
                 	else if(isData(sock_index)){
+							printf("Data connection incoming\n");							
 							data_recv_hook(sock_index);
 							FD_CLR(sock_index, &master_list);
 					}

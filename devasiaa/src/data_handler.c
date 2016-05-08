@@ -165,7 +165,7 @@ void data_recv_hook(int sock_index){
     
 
     free(data_packet);
-
+	printf("File RCVD in %d chunks\n", sentcount);
     
     return;
 }
