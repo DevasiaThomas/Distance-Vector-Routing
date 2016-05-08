@@ -135,7 +135,7 @@ void main_loop()
                 	/* data_socket */
                 	else if(sock_index == data_socket){
 						printf("New data connection\n");
-                	    fdaccept = new_control_conn(sock_index);
+                	    fdaccept = new_data_conn(sock_index);
 
                     /* Add to watched socket list */
                     	FD_SET(fdaccept, &master_list);
