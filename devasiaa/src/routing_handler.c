@@ -53,6 +53,7 @@ void read_conn(int sock_index)
 	timerholders[srtr] = 1;
 	gettimeofday(&current,NULL);
 	//clock_gettime(CLOCK_MONOTONIC, &current);
+	ctr[srtr] = 0;
 	start[srtr] = current;	
 	//printf("numrtr%d\tsport%d\tsip%d\trip%d\trport%d\trid%d\trcost%d\n",ntohs(hdr.numrtr),ntohs(hdr.sport),ntohl(hdr.sip),ntohl(pay.rip),ntohs(pay.rport),ntohs(pay.rid),ntohs(pay.rcost));	
 }

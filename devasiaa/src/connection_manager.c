@@ -32,7 +32,7 @@
 
 void main_loop()
 {
-    int selret, sock_index, fdaccept, ctr[5];
+    int selret, sock_index, fdaccept;
 
     while(TRUE){
         watch_list = master_list;

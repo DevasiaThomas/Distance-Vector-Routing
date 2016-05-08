@@ -93,7 +93,8 @@ void init_handler(int sock_index,char *cntrl_payload)
 				timerholders[i] = 1;
 				//printf("Found myself\n");
 			}
-		}	
+		}
+		ctr[i] = 0;	
 	}
 	//for(int i=0;i<nrtr;i++)
 		//printf("Pos[i]:%d\n",pos[i]);

@@ -20,6 +20,7 @@ int head_fd;
 struct timeval timeout, current, start[5];
 int timerholder;
 int timerholders[5];
+int ctr[5];
 
 uint16_t CONTROL_PORT;
 int self; // to identify oneself(router)
