@@ -57,7 +57,7 @@ void send_stats(int sock_index, uint8_t tID){
 	LIST_FOREACH(statistics, &stats_conn_list, next)
         if(statistics->tID == tID){
 			char *cntrl_response_header;
-			cntrl_response_header = create_response_header(sock_index, 6, 0,(sizeof(uint16_t)*statistics->seqcount)+STATS_PACK_HDR_SIZE+CNTRL_RESP_HEADER_SIZE);
+			cntrl_response_header = create_response_header(sock_index, 6, 0,(sizeof(uint16_t)*statistics->seqcount)+STATS_PACK_HDR_SIZE);
 			struct STATS_PACK_HDR sph;
 			sph.tID = statistics->tID;
 			sph.TTL = statistics->TTL;
