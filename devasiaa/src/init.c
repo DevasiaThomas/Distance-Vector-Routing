@@ -75,6 +75,7 @@ void init_handler(int sock_index,char *cntrl_payload)
 		dataport[i] = ntohs(rtrinfo.dataport);
 		//printf("dataport:%d\t",dataport[i]); 
 		dv[i] = ntohs(rtrinfo.cost);
+		dv_init[i] = ntohs(rtrinfo.cost);
 		//printf("Cost to rtr:%d\n",dv[i]);
 		if(dv[i] == INF){
 			//printf("Yay INF!!!\n");

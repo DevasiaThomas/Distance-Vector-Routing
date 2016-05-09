@@ -74,6 +74,21 @@ void read_conn(int sock_index)
 			}
 		}
 	}
+	for(int i =0;i<nrtr;i++){
+		memcpy(&pay, total+ RTR_UPDATE_HDR_SIZE + (i*RTR_UPDATE_PAY_SIZE), RTR_UPDATE_PAY_SIZE);
+		if(nhop[pos[i]] == srtr){
+			//need to check overflow here
+			if((dv[srtr]+ntohs(pay.rcost))!=dv[pos[i]]){
+				if((dv[srtr]+ntohs(pay.rcost))< dv_init[pos[i]]){
+					dv[pos[i]] = (dv[srtr]+ntohs(pay.rcost));
+				}
+				else{
+					dv[pos[i]] = dv_init[pos[i]];
+					nhop[pos[i]] = pos[i];
+				}
+			}
+		}
+	}
 	timerholders[srtr] = 1;
 	gettimeofday(&current,NULL);
 	//clock_gettime(CLOCK_MONOTONIC, &current);

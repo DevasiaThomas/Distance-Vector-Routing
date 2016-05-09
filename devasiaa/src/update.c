@@ -51,11 +51,13 @@ void update_handler(int sock_index,char *cntrl_payload)
 	//printf("DV entries before change\n");
 	//for(int i=0;i<nrtr;i++)
 		//printf("%d\t",dv[pos[i]]);
-	rtrdiff = htons(updatepay.cost) - dv[rtrindex];
+	rtrdiff = htons(updatepay.cost) - dv_init[rtrindex];
+	dv_init[rtrindex]+=rtrdiff;
 	//printf("\nDiff in cost%d\n",rtrdiff);
 	//printf("DV entries after change\n");
 	for(int i=0;i<nrtr;i++){
 		if((pos[i]!=self)&&(nhop[pos[i]]==rtrindex)){
+			//check overflow here
 			dv[pos[i]]+=rtrdiff;
 		}
 		//printf("%d\t",dv[pos[i]]);

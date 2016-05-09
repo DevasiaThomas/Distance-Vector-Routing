@@ -32,6 +32,7 @@ uint32_t rtrip[5];
 uint16_t dataport[5];
 uint16_t nhop[5];
 uint16_t dv[5];
+uint16_t dv_init[5];
 int pos [5];
 int neighbor[5];
 #endif

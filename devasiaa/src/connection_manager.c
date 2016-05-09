@@ -55,8 +55,11 @@ void main_loop()
 				if(ctr[timerholder]==3){
 					for(int i=0;i<nrtr;i++){
 						if((pos[i]!=self)&&(nhop[pos[i]]==timerholder)){
-							dv[pos[i]] = INF;
-							nhop[pos[i]] = INF;
+							dv_init[pos[i]] = INF;
+							if(nhop[pos[i]] == pos[i]){
+								dv[pos[i]] = INF;
+								nhop[pos[i]] = INF;
+							}
 						}
 					}
 					timerholders[timerholder] = 0;
@@ -79,8 +82,11 @@ void main_loop()
 						if(ctr[i]==3){
 							for(int j=0;j<nrtr;j++){
 								if((pos[j]!=self)&&(nhop[pos[j]]==i)){
-									dv[pos[j]] = INF;
-									nhop[pos[j]] = INF;
+									dv_init[pos[j]] = INF;
+									if(nhop[pos[i]] == pos[i]){
+										dv[pos[i]] = INF;
+										nhop[pos[i]] = INF;
+									}
 								}
 							}
 							timerholders[i] = 0;
