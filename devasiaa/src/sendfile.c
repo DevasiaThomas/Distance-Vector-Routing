@@ -30,6 +30,7 @@
 #include "../include/control_header_lib.h"
 #include "../include/network_util.h"
 #include "../include/sendfile.h"
+#include "../include/stats_handler.h"
 
 #define SENDFILE_HDR_SIZE 8
 #define DATA_PACKET_SIZE 12
@@ -95,6 +96,7 @@ void sendfile_handler(int sock_index,char *cntrl_payload,int payload_len)
 		while( read(fd, buff, FILE_DATA_SIZE) > 0 ){
 			if(h != 0){
 				sendALL(sd, data_packet, DATA_PACKET_SIZE+FILE_DATA_SIZE);
+				memcpy(pdp,data_packet,1036);
 				sent_count++;
 				dp.seq = htons(ntohs(dp.seq)+1);
 				memcpy(data_packet, &dp, DATA_PACKET_SIZE);
@@ -115,9 +117,11 @@ void sendfile_handler(int sock_index,char *cntrl_payload,int payload_len)
 		dp.fin = FIN_SET;
 		memcpy(data_packet, &dp, DATA_PACKET_SIZE);
 		sendALL(sd, data_packet, DATA_PACKET_SIZE+FILE_DATA_SIZE);
+		memcpy(ldp,data_packet,1036);
 		sent_count++;
 		close(fd);
 	}
+	new_stats_conn(sendfile_hdr.tID, sendfile_hdr.TTL, ntohs(sendfile_hdr.seq), sent_count);
 	printf("File SENT in %d chunks\n", sent_count);
 	close(sd);	
 	free(filename);

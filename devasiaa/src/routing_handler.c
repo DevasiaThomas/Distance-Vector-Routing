@@ -67,9 +67,11 @@ void read_conn(int sock_index)
 	}
 	for(int i =0;i<nrtr;i++){
 		memcpy(&pay, total+ RTR_UPDATE_HDR_SIZE + (i*RTR_UPDATE_PAY_SIZE), RTR_UPDATE_PAY_SIZE);
-		if(dv[pos[i]] > (dv[srtr] + ntohs(pay.rcost))){
-			dv[pos[i]] = dv[srtr] + ntohs(pay.rcost);
-			nhop[pos[i]] = srtr;
+		if((ntohs(pay.rcost)<(dv[srtr] + ntohs(pay.rcost)))&&(dv[srtr]<(dv[srtr] + ntohs(pay.rcost)))){
+			if(dv[pos[i]] > (dv[srtr] + ntohs(pay.rcost))){
+				dv[pos[i]] = dv[srtr] + ntohs(pay.rcost);
+				nhop[pos[i]] = srtr;
+			}
 		}
 	}
 	timerholders[srtr] = 1;

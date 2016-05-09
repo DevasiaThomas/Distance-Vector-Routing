@@ -32,6 +32,7 @@
 
 #include "../include/global.h"
 #include "../include/data_handler.h"
+#include "../include/stats_handler.h"
 #include "../include/network_util.h"
 
 #define DATA_PACKET_HDR_SIZE 12
@@ -98,7 +99,6 @@ void data_recv_hook(int sock_index){
         free(data_packet);
         return;
     }
-	sentcount++;
 	memcpy(&dp_hdr,data_packet,DATA_PACKET_HDR_SIZE);
 	for(int i=0;i<nrtr;i++){
 		if(rtrip[pos[i]] == ntohl(dp_hdr.dIP)){
@@ -116,21 +116,31 @@ void data_recv_hook(int sock_index){
 		sprintf(filename+(sizeof(NAME)-1),"%d",dp_hdr.tID);
 		memcpy(filebuff,data_packet+DATA_PACKET_HDR_SIZE,DATA_PACKET_PAY_SIZE);
 		sentcount++;
-		while(recvALL(sock_index, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE)) > 0){
+		if(dp_hdr.TTL!=0){
+			memcpy(ldp,data_packet,1036);
+		}
+		while((recvALL(sock_index, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE)) > 0)&&(dp_hdr.TTL!=0)){
+			memcpy(pdp,ldp,1036);
+			memcpy(ldp,data_packet,1036);
 			memcpy(filebuff+(sentcount*DATA_PACKET_PAY_SIZE),data_packet+DATA_PACKET_HDR_SIZE,DATA_PACKET_PAY_SIZE);
-			sentcount++;
+			sentcount++;			
 		}
-		if ((fd=open(filename, O_WRONLY|O_CREAT, 0644))<0)
-			ERROR("FILE CREATION ZZ");
-		for(int i=0;i<sentcount/10;i++){
-			if(write(fd,filebuff+(i*10*1024),(10*1024))<0)
-				ERROR("WRITING");
+		if(dp_hdr.TTL != 0){
+			if ((fd=open(filename, O_WRONLY|O_CREAT, 0644))<0)
+				ERROR("FILE CREATION ZZ");
+			for(int i=0;i<sentcount/10;i++){
+				if(write(fd,filebuff+(i*10*1024),(10*1024))<0)
+					ERROR("WRITING");
+			}
+			if(sentcount%10!=0){
+				if(write(fd,filebuff+(sentcount*1024),((sentcount%10)*1024))<0)
+					ERROR("Final write is wrong");
+			}
+			close(fd);
 		}
-		if(sentcount%10!=0){
-			if(write(fd,filebuff+(sentcount*1024),((sentcount%10)*1024))<0)
-				ERROR("Final write is wrong");
+		else{
+				printf("Dropping File\n");
 		}
-		close(fd);
 		remove_data_conn(sock_index);
 	}
 	else{
@@ -151,6 +161,7 @@ void data_recv_hook(int sock_index){
 			memcpy(data_packet,&dp_hdr,DATA_PACKET_HDR_SIZE);
 			sendALL(sd, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE));
 			sentcount ++;
+			memcpy(ldp,data_packet,1036);
 		}
 		else{
 			printf("Packets Dropped\n");
@@ -162,6 +173,8 @@ void data_recv_hook(int sock_index){
 				memcpy(data_packet,&dp_hdr,DATA_PACKET_HDR_SIZE);
 				sendALL(sd, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE));
 				sentcount++;
+				memcpy(pdp,ldp,1036);
+				memcpy(ldp,data_packet,1036);
 			}
 			else{
 				printf("Packets dropped\n");
@@ -170,7 +183,8 @@ void data_recv_hook(int sock_index){
 		close(sd);
 		remove_data_conn(sock_index);
 	}
-		    
+	if(dp_hdr.TTL!=0)	    
+		new_stats_conn(dp_hdr.tID, dp_hdr.TTL, ntohs(dp_hdr.seq), sentcount);
 
     free(data_packet);
 	printf("File RCVD in %d chunks\n", sentcount);

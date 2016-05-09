@@ -37,6 +37,7 @@
 #include "../include/routingtable.h"
 #include "../include/update.h"
 #include "../include/sendfile.h"
+#include "../include/stats_handler.h"
 
 #ifndef PACKET_USING_STRUCT
     #define CNTRL_CONTROL_CODE_OFFSET 0x04
@@ -186,6 +187,17 @@ bool control_recv_hook(int sock_index)
 				break;
 
 		case 5: sendfile_handler(sock_index,cntrl_payload,payload_len);
+				break;
+
+		case 6: ;uint8_t tID;
+				memcpy(&tID,cntrl_payload,1);
+				send_stats(sock_index,tID);
+				break;
+
+		case 7: last_data_packet(sock_index);
+				break;	
+
+		case 8: penultimate_data_packet(sock_index)			;
 				break;
 
 		default: printf("Wtf value this %d\n", control_code);
