@@ -107,6 +107,7 @@ void data_recv_hook(int sock_index){
 		}
 	}
 	dp_hdr.TTL -=1;
+	memcpy(data_packet,&dp_hdr,DATA_PACKET_HDR_SIZE);
 	uint16_t initseq = dp_hdr.seq;
 	if(dIndex == self){
 		int fd;
@@ -121,6 +122,9 @@ void data_recv_hook(int sock_index){
 			memcpy(ldp,data_packet,1036);
 		}
 		while((recvALL(sock_index, data_packet, (DATA_PACKET_HDR_SIZE+DATA_PACKET_PAY_SIZE)) > 0)&&(dp_hdr.TTL!=0)){
+			memcpy(&dp_hdr,data_packet,DATA_PACKET_HDR_SIZE);
+			dp_hdr.TTL -=1;
+			memcpy(data_packet,&dp_hdr,DATA_PACKET_HDR_SIZE);
 			memcpy(pdp,ldp,1036);
 			memcpy(ldp,data_packet,1036);
 			memcpy(filebuff+(sentcount*DATA_PACKET_PAY_SIZE),data_packet+DATA_PACKET_HDR_SIZE,DATA_PACKET_PAY_SIZE);
