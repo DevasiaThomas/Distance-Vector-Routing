@@ -26,6 +26,9 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 
+
+#include "../include/global.h"
+
 ssize_t recvALL(int sock_index, char *buffer, ssize_t nbytes)
 {
     ssize_t bytes = 0;
@@ -48,4 +51,18 @@ ssize_t sendALL(int sock_index, char *buffer, ssize_t nbytes)
         bytes += send(sock_index, buffer+bytes, nbytes-bytes, 0);
 
     return bytes;
+}
+
+size_t highestOneBitPosition(uint16_t a) { // the below two functions are to detect overflow and is taken from
+    size_t bits=0;						//http://stackoverflow.com/questions/199333/how-to-detect-integer-overflow-in-c-c
+    while (a!=0) {
+        ++bits;
+        a>>=1;
+    };
+    return bits;
+}
+
+bool addition_is_safe(uint16_t a, uint16_t b) {
+    size_t a_bits=highestOneBitPosition(a), b_bits=highestOneBitPosition(b);
+    return (a_bits<32 && b_bits<32);
 }

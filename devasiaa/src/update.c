@@ -40,7 +40,8 @@ struct __attribute__((__packed__)) UPDATE_PAY
 void update_handler(int sock_index,char *cntrl_payload)
 {
 	struct UPDATE_PAY updatepay;
-	int rtrindex,rtrdiff;
+	int rtrindex;
+	int16_t rtrdiff;
 	memcpy(&updatepay, cntrl_payload, UPDATE_PAY_SIZE);
 	for(int i=0;i<nrtr;i++){
 		if(rtrid[pos[i]] == ntohs(updatepay.rtrid)){
@@ -58,7 +59,17 @@ void update_handler(int sock_index,char *cntrl_payload)
 	for(int i=0;i<nrtr;i++){
 		if((pos[i]!=self)&&(nhop[pos[i]]==rtrindex)){
 			//check overflow here
-			dv[pos[i]]+=rtrdiff;
+			if(rtrdiff>0){
+				if(addition_is_safe(dv[pos[i]], (uint16_t)rtrdiff)){
+					dv[pos[i]]+=rtrdiff;
+				}
+				else{
+					dv[pos[i]] = INF;
+				}
+			}
+			else{
+				dv[pos[i]]+=rtrdiff;
+			}
 		}
 		//printf("%d\t",dv[pos[i]]);
 	}

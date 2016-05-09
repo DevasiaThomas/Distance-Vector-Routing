@@ -35,4 +35,6 @@ uint16_t dv[5];
 uint16_t dv_init[5];
 int pos [5];
 int neighbor[5];
+
+bool addition_is_safe(uint16_t a, uint16_t b);
 #endif
