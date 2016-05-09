@@ -58,8 +58,8 @@ void update_handler(int sock_index,char *cntrl_payload)
 	for(int i=0;i<nrtr;i++){
 		if((pos[i]!=self)&&(nhop[pos[i]]==rtrindex)){
 			//check overflow here
-			if((dv[pos[i]]<(dv[pos[i]]+rtrdiff))&&(rtrdiff<(dv[pos[i]]+rtrdiff))){
-			dv[pos[i]]+=rtrdiff;
+			if((dv[pos[i]]<(dv[pos[i]]+rtrdiff))&&(rtrdiff<(dv[pos[i]]+rtrdiff)))
+				dv[pos[i]]+=rtrdiff;
 		}
 		//printf("%d\t",dv[pos[i]]);
 	}
