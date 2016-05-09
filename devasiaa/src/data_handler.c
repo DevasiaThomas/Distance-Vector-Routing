@@ -107,6 +107,7 @@ void data_recv_hook(int sock_index){
 		}
 	}
 	dp_hdr.TTL -=1;
+	uint16_t initseq = dp_hdr.seq;
 	if(dIndex == self){
 		int fd;
 		char *filename = (char *)malloc(sizeof(NAME)+3);
@@ -184,7 +185,7 @@ void data_recv_hook(int sock_index){
 		remove_data_conn(sock_index);
 	}
 	if(dp_hdr.TTL!=0)	    
-		new_stats_conn(dp_hdr.tID, dp_hdr.TTL, ntohs(dp_hdr.seq), sentcount);
+		new_stats_conn(dp_hdr.tID, dp_hdr.TTL, ntohs(initseq), sentcount);
 
     free(data_packet);
 	printf("File RCVD in %d chunks\n", sentcount);
