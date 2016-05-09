@@ -107,6 +107,7 @@ void sendfile_handler(int sock_index,char *cntrl_payload,int payload_len)
 				dp.dIP = sendfile_hdr.dIP;
 				dp.tID = sendfile_hdr.tID;
 				dp.seq = sendfile_hdr.seq;
+				dp.TTL = sendfile_hdr.TTL;
 				dp.fin = 0;
 				dp.pad1 = 0;
 				dp.pad2 = 0;
