@@ -78,13 +78,15 @@ void read_conn(int sock_index)
 		memcpy(&pay, total+ RTR_UPDATE_HDR_SIZE + (i*RTR_UPDATE_PAY_SIZE), RTR_UPDATE_PAY_SIZE);
 		if(nhop[pos[i]] == srtr){
 			//need to check overflow here
-			if((dv[srtr]+ntohs(pay.rcost))!=dv[pos[i]]){
-				if((dv[srtr]+ntohs(pay.rcost))< dv_init[pos[i]]){
-					dv[pos[i]] = (dv[srtr]+ntohs(pay.rcost));
-				}
-				else{
-					dv[pos[i]] = dv_init[pos[i]];
-					nhop[pos[i]] = pos[i];
+			if((ntohs(pay.rcost)<(dv[srtr] + ntohs(pay.rcost)))&&(dv[srtr]<(dv[srtr] + ntohs(pay.rcost)))){
+				if((dv[srtr]+ntohs(pay.rcost))!=dv[pos[i]]){
+					if((dv[srtr]+ntohs(pay.rcost))< dv_init[pos[i]]){
+						dv[pos[i]] = (dv[srtr]+ntohs(pay.rcost));
+					}
+					else{
+						dv[pos[i]] = dv_init[pos[i]];
+						nhop[pos[i]] = pos[i];
+					}
 				}
 			}
 		}
